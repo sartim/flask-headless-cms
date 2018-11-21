@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     if sys.version_info < (3, 0):
         input = raw_input
-    proceed = input("\nProceed (yes/no)? ")
+    proceed = input("Creating Flask Skeleton\nProceed (yes/no)? ")
     valid = ["yes", "y", "no", "n"]
     while True:
         if proceed.lower() in valid:

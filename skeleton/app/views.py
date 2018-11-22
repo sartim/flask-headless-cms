@@ -16,11 +16,12 @@ def create_field_params():
         validated = validator.field_validator(keys, {})
         if not validated["success"]:
             return jsonify(validated['data'])
-    if request.is_json():
+    if request.is_json:
         body = request.get_json()
         validated = validator.field_validator(keys, body)
         if not validated["success"]:
             return jsonify(validated['data'])
         model_generator.make_file(body)
+        return jsonify(message="Success")
     else:
         return jsonify({"message": "Content type is not json"})

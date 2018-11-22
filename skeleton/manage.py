@@ -1,11 +1,7 @@
-"""
-This handles management commands for app
-"""
-import logging
-
 import sys
+
 from flask_migrate import MigrateCommand, Migrate
-from flask_script import Server, Manager, prompt_bool, Shell, prompt_pass, prompt
+from flask_script import Server, Manager, prompt_bool, Shell
 from app import app, db
 from app.core import models
 from app import views

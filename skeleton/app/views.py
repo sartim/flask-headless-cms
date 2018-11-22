@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from skeleton.app import app
-from skeleton.app.helpers import validator, model_generator
+from app import app
+from app.helpers import validator, model_generator
 
 
 @app.route('/')

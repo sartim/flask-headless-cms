@@ -16,6 +16,7 @@ def get_arguments(argv):
     parser = argparse.ArgumentParser(description='Scaffold a Flask Skeleton.')
     parser.add_argument('appname', help='The application name')
     parser.add_argument('-s', '--skeleton', help='The skeleton folder to use.')
+    parser.add_argument('-d', '--database', help='The database name')
     parser.add_argument('-g', '--git', action='store_true')
     args = parser.parse_args()
     return args
@@ -32,6 +33,7 @@ def main(args):
     appname = args.appname
     fullpath = os.path.join(cwd, appname)
     skeleton_dir = args.skeleton
+    database_name = args.database
 
     # Tasks #
 

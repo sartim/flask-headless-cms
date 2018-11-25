@@ -30,7 +30,10 @@ def create_model(data, file_path):
         field_list = []
         for field in data['fields']:
             if field['is_primary_key']:
-                field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
+                if not field['data_type'] == 'UUID':
+                    field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
+                else:
+                    field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
             if not field['is_primary_key']:
                 if field['data_type'] == 'INTEGER':
                     if not field['is_null']:

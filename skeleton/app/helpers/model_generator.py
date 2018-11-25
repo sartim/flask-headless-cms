@@ -16,7 +16,7 @@ class ModelCreator:
     @classmethod
     def model_string(cls, fields, tbl_name):
         return "from app import db\n" \
-               "\n\nclass {model_name}(db.Model):\n\t" \
+               "\n\nclass {model_name}(Base):\n\t" \
                "__tablename__ = '{table_name}'\n\n\t" \
                "{fields}\n\n\t" \
                "{init_string}\n\n\t" \

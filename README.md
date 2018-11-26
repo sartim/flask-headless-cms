@@ -1,4 +1,4 @@
-###Features
+### Features
 
 - Support SQLAlchemy models
 - Model generator
@@ -6,13 +6,13 @@
 
 # Flask Headless CMS
 
-###Setup
+### Setup
 
-####Using python
+#### Using python
 
     `$ python create_app.py <new_project> -s skeleton -g`
 
-####Using alias
+#### Using alias
 
     `$ alias flaskcli="python /path/to/startup/script/create_app.py"`
 

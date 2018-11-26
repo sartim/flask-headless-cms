@@ -10,9 +10,10 @@
 
 ####Using python
 
-`$ python create_app.py <new_project> -s skeleton -g`
+    `$ python create_app.py <new_project> -s skeleton -g`
 
 ####Using alias
 
-`$ alias flaskcli="python /path/to/startup/script/create_app.py"`
-`$ flaskcli <new_project> -s skeleton -g`
+    `$ alias flaskcli="python /path/to/startup/script/create_app.py"`
+
+    `$ flaskcli <new_project> -s skeleton -g`

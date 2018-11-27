@@ -7,7 +7,6 @@ import subprocess
 import shutil
 
 # Globals #
-
 cwd = os.getcwd()
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -21,9 +20,6 @@ def get_arguments(argv):
     parser.add_argument('-g', '--git', action='store_true')
     args = parser.parse_args()
     return args
-
-
-
 
 
 def main(args):

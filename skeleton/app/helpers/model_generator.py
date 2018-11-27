@@ -11,7 +11,7 @@ class ModelCreator:
 
     @staticmethod
     def init_string():
-        return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.name)'
+        return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
 
     @classmethod
     def model_string(cls, fields, tbl_name):
@@ -31,7 +31,7 @@ def create_model(data, file_path):
         for field in data['fields']:
             if field['is_primary_key']:
                 if not field['data_type'] == 'UUID':
-                    field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
+                    field_list.append('{0} = db.Column(db.String, primary_key=True)'.format(field['column_name']))
             if not field['is_primary_key']:
                 if field['data_type'] == 'INTEGER':
                     if not field['is_null']:

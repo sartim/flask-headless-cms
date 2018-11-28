@@ -7,13 +7,12 @@ import subprocess
 import shutil
 
 # Globals #
-
 cwd = os.getcwd()
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 
 def get_arguments(argv):
-    parser = argparse.ArgumentParser(description='Scaffold a Flask Skeleton.')
+    parser = argparse.ArgumentParser(description='Scaffold a Flask CMS Skeleton.')
     parser.add_argument('appname', help='The application name')
     parser.add_argument('-s', '--skeleton', help='The skeleton folder to use.')
     parser.add_argument('-t', '--type', help='The database type to use')
@@ -21,9 +20,6 @@ def get_arguments(argv):
     parser.add_argument('-g', '--git', action='store_true')
     args = parser.parse_args()
     return args
-
-
-
 
 
 def main(args):

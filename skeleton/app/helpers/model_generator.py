@@ -53,6 +53,12 @@ def create_model(data, file_path):
                         field_list.append('{0} = db.Column(db.Boolean, default=False)'.format(field['column_name']))
                     else:
                         field_list.append('{0} = db.Column(db.Boolean, default=True)'.format(field['column_name']))
+                if field['data_type'] == 'JSON':
+                    if not field['is_null']:
+                        field_list.append('{0} = db.Column(db.JSON)'.format(field['column_name']))
+                    else:
+                        field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
+
 
         join_fields = ";".join(field_list)
         fields = join_fields.replace(";", "\n\t")

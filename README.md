@@ -40,3 +40,30 @@ _On Linux_
     $ python manage.py db migrate
     $ python manage.py db upgrade
  
+ 
+### API 
+
+URL: `/field/param`
+
+METHOD: `POST`
+
+BODY:
+ 
+```
+{
+    "dir": "package_name",
+    "model": "ModelName",
+    "table": "table_name",
+    "fields": [{
+            "column_name": "id",
+            "data_type": "data_type",
+            "data_size": <integer>,
+            "is_primary_key": boolean,
+            "is_foreign_key": boolean,
+            "is_null": boolean,
+            "default": null
+	    },
+	    ............
+	]
+}
+```

@@ -12,12 +12,35 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/sartim/flask-headless-cms/issues)
 
 ### Setup
+_On Mac_
 
-#### Using python
+* Install [Homebrew](https://docs.brew.sh/Installation)
+* Use the following command to install Python 3.x via Homebrew
 
-    $ python create_app.py <new_project> -s skeleton -g
+    
+    $ brew install python
+    $ pip3 install virtualenv
 
-#### Using alias
+_On Linux_
+   
+    $ pip3 install virtualenv
 
-    $ alias flaskcli="python /path/to/startup/script/create_app.py"
+#### Create alias
+
+    $ python
+    
+        >>> import os
+        >>> import flask_headless_cms
+        >>> os.path.dir_name(flask_headless_cms.__file__)
+        '/path/to/flask_headless_cms'
+        
+    $ alias flaskcli="python /path/to/flask_headless_cms/create_app.py"
     $ flaskcli <new_project> -s skeleton -g
+    $ cd <new_project>
+
+#### Make Migrations
+    
+    $ python manage.py db init
+    $ python manage.py db migrate
+    $ python manage.py db upgrade
+ 

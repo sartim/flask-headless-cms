@@ -14,10 +14,6 @@
 ### Setup
 _On Mac_
 
-* Install [Homebrew](https://docs.brew.sh/Installation)
-* Use the following command to install Python 3.x via Homebrew
-
-    
     $ brew install python
     $ pip3 install virtualenv
 

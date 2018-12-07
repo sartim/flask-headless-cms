@@ -67,3 +67,60 @@ BODY:
 	]
 }
 ```
+
+_Example_ 
+
+```
+{
+    "dir": "account",
+    "model": "AccountUser",
+    "table": "account_users",
+    "fields": [
+    	{
+	    	"column_name": "id",
+	    	"data_type": "INTEGER",
+	    	"data_size": null,
+	    	"is_primary_key": true,
+	    	"is_foreign_key": true,
+			"is_null": false,
+			"default": null
+	     },
+	     {
+	    	"column_name": "name",
+	    	"data_type": "VARCHAR",
+	    	"data_size": 255,
+	    	"is_primary_key": false,
+	    	"is_foreign_key": false,
+	    	"is_null": false,
+	    	"default": null
+	     },
+	     {
+	         "column_name": "password",
+	         "data_type": "VARCHAR",
+	         "data_size": 255,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "defualt": null
+	     },
+	     {
+	         "column_name": "phone_number",
+	         "data_type": "VARCHAR",
+	         "data_size": 255,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "default": null
+	     },
+	     {
+	         "column_name": "is_active",
+	         "data_type": "BOOLEAN",
+	         "data_size": null,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "default": false
+	     }
+	]
+}
+```

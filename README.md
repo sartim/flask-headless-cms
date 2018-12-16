@@ -31,7 +31,7 @@ _On Linux_
         '/path/to/flask_headless_cms'
         
     $ alias flaskcli="python /path/to/flask_headless_cms/create_app.py"
-    $ flaskcli <new_project> -s skeleton -g
+    $ flaskcli <new_project> -s skeleton -t PostgreSQL -d test_db -h 127.0.0.1 -u postgres -g
     $ cd <new_project>
 
 #### Make Migrations

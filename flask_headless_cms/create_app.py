@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function, unicode_literals
 
 import sys
 import os
@@ -7,6 +8,7 @@ import subprocess
 import shutil
 import jinja2
 import codecs
+from whaaaaat import prompt, print_json
 
 # Globals #
 cwd = os.getcwd()
@@ -21,32 +23,18 @@ template_env = jinja2.Environment(loader=template_loader)
 def get_arguments(argv):
     parser = argparse.ArgumentParser(description='Scaffold a Flask CMS Skeleton.')
     parser.add_argument('appname', help='The application name')
-    parser.add_argument('-s', '--skeleton', help='The skeleton folder to use.')
-    parser.add_argument('-t', '--type', help='The database type to use')
-    parser.add_argument('-d', '--databasename', help='The database name to use')
-    parser.add_argument('-i', '--databasehost', help='The database host name to use')
-    parser.add_argument('-u', '--databaseuser', help='The database user name to use')
-    parser.add_argument('-p', '--databaseport', help='The database port to use')
-    parser.add_argument('-e', '--env', help='The environment to use')
-    parser.add_argument('-g', '--git', action='store_true')
     args = parser.parse_args()
     return args
 
 
-def main(args):
+def main(args, answers):
     print("\nScaffolding...")
 
     # Variables #
 
     appname = args.appname
     fullpath = os.path.join(cwd, appname)
-    skeleton_dir = args.skeleton
-    database_type = args.type
-    db_name = args.databasename
-    db_host = args.databasehost
-    db_user = args.databaseuser
-    db_port = args.databaseport
-    env = args.env
+    skeleton_dir = 'skeleton'
 
     # Tasks #
 
@@ -59,23 +47,19 @@ def main(args):
     secret_key = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
     basic_auth_password = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
     template = template_env.get_template('.env.jinja2')
-    template_var = {
-        'secret_key': secret_key,
-        'db_name': db_name,
-        'db_host': db_host,
-        'db_user': db_user,
-        'db_port': db_port,
-        'basic_auth_user': 'app',
-        'basic_auth_password': basic_auth_password,
-        'is_dev': 'TRUE' if env == 'dev' else 'FALSE',
-        'is_test': 'TRUE' if env == 'test' else 'FALSE',
-        'is_prod': 'TRUE' if env == 'prod' else 'FALSE'
-    }
+    template_var = dict(secret_key=secret_key, db_name=answers['database_name'], db_host=answers['database_host'],
+                        db_user=answers['database_user'], db_port=answers['database_port'],
+                        basic_auth_user=answers['basic_auth_user'],
+                        basic_auth_password=answers['basic_auth_password'] if answers[
+                            'basic_auth_password'] else basic_auth_password,
+                        is_dev='TRUE' if answers['environment'] == 'Development' else 'FALSE',
+                        is_test='TRUE' if answers['environment'] == 'Testing' else 'FALSE',
+                        is_prod='TRUE' if answers['environment'] == 'Production' else 'FALSE')
     with open(os.path.join(fullpath,'.env'), 'w') as fd:
         fd.write(template.render(template_var))
 
     # Git init
-    if args.git:
+    if answers['has_git']:
         print("Initializing Git...")
         output, error = subprocess.Popen(
             ['git', 'init', fullpath],
@@ -99,8 +83,74 @@ if __name__ == '__main__':
     while True:
         if proceed.lower() in valid:
             if proceed.lower() == "yes" or proceed.lower() == "y":
-                main(arguments)
-                print("Done!")
+                questions = [
+                    {
+                        'type': 'confirm',
+                        'name': 'has_git',
+                        'message': 'Enable Git?'
+                    },
+                    {
+                        'type': 'rawlist',
+                        'name': 'environment',
+                        'message': 'Environment',
+                        'choices': ['Development', 'Testing', 'Testing', 'Production']
+                    },
+                    {
+                        'type': 'rawlist',
+                        'name': 'database',
+                        'message': 'Please select one of the database engines',
+                        'choices': ['PostgreSQL', 'MySQL']
+                    },
+                    {
+                        'type': 'input',
+                        'name': 'database_host',
+                        'message': 'Please enter your database host',
+                    },
+                    {
+                        'type': 'input',
+                        'name': 'database_port',
+                        'message': 'Please enter your database port',
+                    },
+                    {
+                        'type': 'input',
+                        'name': 'database_name',
+                        'message': 'Please enter your database name',
+                    },
+                    {
+                        'type': 'input',
+                        'name': 'database_user',
+                        'message': 'Please enter your database user',
+                    },
+                    {
+                        'type': 'password',
+                        'name': 'password',
+                        'message': 'Please enter your database password'
+                    },
+                    {
+                        'type': 'input',
+                        'name': 'basic_auth_user',
+                        'message': 'Please enter your basic auth user',
+                    },
+                    {
+                        'type': 'password',
+                        'name': 'basic_auth_password',
+                        'message': 'Please enter your basic auth password'
+                    }
+                ]
+                answers = prompt(questions)
+                print_json(answers)
+                confirm_question = [
+                    {
+                        'type': 'confirm',
+                        'name': 'confirm_config',
+                        'message': 'Do you confirm all the configurations?'
+                    }
+                ]
+                confirm_answer = prompt(confirm_question)
+                if confirm_answer['confirm_config']:
+                    main(arguments, answers)
+                    print("Done!")
+                print("Goodbye!")
                 break
             else:
                 print("Goodbye!")

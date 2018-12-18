@@ -19,7 +19,8 @@ setup(name='FlaskHeadlessCms',
           'gevent',
           'greenlet',
           'gunicorn',
-          'psycopg2'
+          'psycopg2',
+          'inquirer'
       ],
       dependency_links=['https://github.com/sartim/flask-headless-cms/master#egg=package-1.0'],
       zip_safe=False)

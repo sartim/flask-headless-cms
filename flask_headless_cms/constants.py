@@ -1,4 +1,4 @@
-POSTGRESQL = 'PistgreSQL'
+POSTGRESQL = 'PostgreSQL'
 MYSQL = 'MySQL'
 DEV = 'Development'
 STAGE = 'Staging'

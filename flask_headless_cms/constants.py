@@ -1,0 +1,6 @@
+POSTGRESQL = 'PistgreSQL'
+MYSQL = 'MySQL'
+DEV = 'Development'
+STAGE = 'Staging'
+TEST =  'Testing'
+PROD = 'Production'

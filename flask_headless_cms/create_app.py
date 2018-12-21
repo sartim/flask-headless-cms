@@ -8,6 +8,8 @@ import subprocess
 import shutil
 import jinja2
 import codecs
+import constants
+from prompt_toolkit.validation import ValidationError, Validator
 from whaaaaat import prompt, print_json
 
 # Globals #
@@ -73,6 +75,14 @@ def main(args, answers):
                 sys.exit(2)
 
 
+class HasValueValidator(Validator):
+    def validate(self, document):
+        ok = document.text
+        if not ok:
+            raise ValidationError(
+                message='Please fill in the value',
+                cursor_position=len(document.text))
+
 if __name__ == '__main__':
     arguments = get_arguments(sys.argv)
 
@@ -99,37 +109,43 @@ if __name__ == '__main__':
                         'type': 'rawlist',
                         'name': 'database',
                         'message': 'Please select one of the database engines',
-                        'choices': ['PostgreSQL', 'MySQL']
+                        'choices': [constants.POSTGRESQL, constants.MYSQL]
                     },
                     {
                         'type': 'input',
                         'name': 'database_host',
                         'message': 'Please enter your database host',
+                        'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
                         'name': 'database_port',
                         'message': 'Please enter your database port',
+                        'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
                         'name': 'database_name',
                         'message': 'Please enter your database name',
+                        'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
                         'name': 'database_user',
                         'message': 'Please enter your database user',
+                        'validate': HasValueValidator
                     },
                     {
                         'type': 'password',
                         'name': 'password',
-                        'message': 'Please enter your database password'
+                        'message': 'Please enter your database password',
+                        'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
                         'name': 'basic_auth_user',
                         'message': 'Please enter your basic auth user',
+                        'validate': HasValueValidator
                     },
                     {
                         'type': 'password',

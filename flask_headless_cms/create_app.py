@@ -8,6 +8,7 @@ import subprocess
 import shutil
 import jinja2
 import codecs
+import psycopg2
 import constants
 from prompt_toolkit.validation import ValidationError, Validator
 from whaaaaat import prompt, print_json
@@ -73,6 +74,18 @@ def main(args, answers):
                 fd.write(error.decode('utf-8'))
                 print("Error with git init")
                 sys.exit(2)
+
+
+def check_for_postgres(answers):
+    try:
+        conn = psycopg2.connect(
+            "dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' connect_timeout=1 "
+                .format(db_name=answers['db_name']))
+        conn.close()
+        return True
+    except:
+        return False
+    pass
 
 
 class HasValueValidator(Validator):
@@ -154,6 +167,11 @@ if __name__ == '__main__':
                     }
                 ]
                 answers = prompt(questions)
+                if answers['database'] == constants.POSTGRESQL:
+                    has_postgres = check_for_postgres(answers)
+                    if not has_postgres:
+                        print("You don't have PostreSQL Installed!")
+                        break
                 print_json(answers)
                 confirm_question = [
                     {

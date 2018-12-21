@@ -20,6 +20,7 @@ setup(name='FlaskHeadlessCms',
           'greenlet',
           'gunicorn',
           'psycopg2',
+          'psycopg2-binary',
           'whaaaaat',
           'prompt-toolkit==1.0.14'
       ],

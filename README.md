@@ -20,6 +20,16 @@ _On Mac_
 _On Linux_
    
     $ pip3 install virtualenv
+    
+### Installation
+    
+    $ pip3 install FlaskHeadlessCms
+    
+or download source then,
+    
+    $ python setup.py install
+
+After installation close & start a new terminal session.
 
 #### Make Migrations
     

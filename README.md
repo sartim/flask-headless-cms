@@ -31,6 +31,10 @@ or download source then,
 
 After installation close & start a new terminal session.
 
+### Start new project
+
+    $ flaskcli <new_project>
+    
 #### Make Migrations
     
     $ python manage.py db init

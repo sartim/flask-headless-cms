@@ -37,6 +37,7 @@ After installation close & start a new terminal session.
     
 #### Make Migrations
     
+    $ cd <new_project>
     $ python manage.py db init
     $ python manage.py db migrate
     $ python manage.py db upgrade

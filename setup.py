@@ -10,6 +10,7 @@ setup(name=NAME,
       author_email='sarrtim@gmail.com',
       license='MIT',
       packages=find_packages(),
+      package_data={'flask_headless_cms': ['templates/.env.jinja2']},
       include_package_data=True,
       install_requires=[
           'requests',

@@ -21,19 +21,6 @@ _On Linux_
    
     $ pip3 install virtualenv
 
-#### Create alias
-
-    $ python
-    
-        >>> import os
-        >>> import flask_headless_cms
-        >>> os.path.dir_name(flask_headless_cms.__file__)
-        '/path/to/flask_headless_cms'
-        
-    $ alias flaskcli="python /path/to/flask_headless_cms/create_app.py"
-    $ flaskcli <new_project>
-    $ cd <new_project>
-
 #### Make Migrations
     
     $ python manage.py db init

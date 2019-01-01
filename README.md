@@ -25,9 +25,11 @@ _On Linux_
     
     $ pip3 install FlaskHeadlessCms
     
-or download source then,
-    
-    $ python setup.py install
+or 
+
+    $ git clone https://github.com/sartim/flask-headless-cms.git
+    $ cd flask-headless-cms
+    $ python install .
 
 After installation close & start a new terminal session.
 

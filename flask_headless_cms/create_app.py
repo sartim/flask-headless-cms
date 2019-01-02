@@ -31,7 +31,7 @@ def get_arguments(argv):
 
 
 def main(args, answers):
-    print("\nScaffolding...")
+    print("\nScaffolding {app_name}...".format(app_name=args.appname))
 
     # Variables #
 
@@ -50,14 +50,14 @@ def main(args, answers):
     secret_key = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
     basic_auth_password = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
     template = template_env.get_template('.env.jinja2')
-    template_var = dict(secret_key=secret_key, db_name=answers['database_name'], db_host=answers['database_host'],
-                        db_user=answers['database_user'], db_port=answers['database_port'],
+    template_var = dict(secret_key=secret_key, db_name=answers['db_name'], db_host=answers['db_host'],
+                        db_user=answers['db_user'], db_port=answers['db_port'],
                         basic_auth_user=answers['basic_auth_user'],
                         basic_auth_password=answers['basic_auth_password'] if answers[
                             'basic_auth_password'] else basic_auth_password,
-                        is_dev='TRUE' if answers['environment'] == 'Development' else 'FALSE',
-                        is_test='TRUE' if answers['environment'] == 'Testing' else 'FALSE',
-                        is_prod='TRUE' if answers['environment'] == 'Production' else 'FALSE')
+                        is_dev='true' if answers['environment'] == 'Development' else 'false',
+                        is_test='true' if answers['environment'] == 'Testing' else 'false',
+                        is_prod='true' if answers['environment'] == 'Production' else 'false')
     with open(os.path.join(fullpath,'.env'), 'w') as fd:
         fd.write(template.render(template_var))
 
@@ -80,7 +80,8 @@ def check_for_postgres(answers):
     try:
         conn = psycopg2.connect(
             "dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' connect_timeout=1 "
-                .format(db_name=answers['db_name']))
+                .format(db_name=answers['db_name'], db_user=answers['db_user'], db_host=answers['db_host'],
+                        db_password=answers['db_password']))
         conn.close()
         return True
     except:
@@ -101,7 +102,7 @@ if __name__ == '__main__':
 
     if sys.version_info < (3, 0):
         input = raw_input
-    proceed = input("Creating Flask Skeleton\nProceed (yes/no)? ")
+    proceed = input("Creating app: {app_name}\nProceed (yes/no)? ".format(app_name=arguments.appname))
     valid = ["yes", "y", "no", "n"]
     while True:
         if proceed.lower() in valid:
@@ -115,7 +116,7 @@ if __name__ == '__main__':
                     {
                         'type': 'rawlist',
                         'name': 'environment',
-                        'message': 'Environment',
+                        'message': 'Please select one of the environments (Input number)',
                         'choices': ['Development', 'Testing', 'Testing', 'Production']
                     },
                     {
@@ -126,31 +127,31 @@ if __name__ == '__main__':
                     },
                     {
                         'type': 'input',
-                        'name': 'database_host',
+                        'name': 'db_host',
                         'message': 'Please enter your database host',
                         'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
-                        'name': 'database_port',
+                        'name': 'db_port',
                         'message': 'Please enter your database port',
                         'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
-                        'name': 'database_name',
+                        'name': 'db_name',
                         'message': 'Please enter your database name',
                         'validate': HasValueValidator
                     },
                     {
                         'type': 'input',
-                        'name': 'database_user',
+                        'name': 'db_user',
                         'message': 'Please enter your database user',
                         'validate': HasValueValidator
                     },
                     {
                         'type': 'password',
-                        'name': 'password',
+                        'name': 'db_password',
                         'message': 'Please enter your database password',
                         'validate': HasValueValidator
                     },

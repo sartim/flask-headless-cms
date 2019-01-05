@@ -55,9 +55,7 @@ BODY:
  
 ```
 {
-    "dir": "package_name",
-    "model": "ModelName",
-    "table": "table_name",
+    "content_name": "<name>",
     "fields": [{
             "column_name": "id",
             "data_type": "data_type",
@@ -76,9 +74,7 @@ _Example_
 
 ```
 {
-    "dir": "account",
-    "model": "AccountUser",
-    "table": "account_users",
+    "content_name": "user",
     "fields": [
     	{
 	    	"column_name": "id",

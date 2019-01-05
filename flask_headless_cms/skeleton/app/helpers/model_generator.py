@@ -14,14 +14,15 @@ class ModelCreator:
         return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
 
     @classmethod
-    def model_string(cls, fields, tbl_name):
+    def model_string(cls, fields, model, table):
         return "from app import db\n" \
+               "from app.core.models import Base\n" \
                "\n\nclass {model_name}(Base):\n\t" \
                "__tablename__ = '{table_name}'\n\n\t" \
                "{fields}\n\n\t" \
                "{init_string}\n\n\t" \
                "{repr_string}".\
-            format(model_name='AccountUser', fields=fields, table_name=tbl_name, init_string=cls.init_string(),
+            format(model_name=model, fields=fields, table_name=table, init_string=cls.init_string(),
                    repr_string=cls.obj_repr_string())
 
 
@@ -62,14 +63,16 @@ def create_model(data, file_path):
 
         join_fields = ";".join(field_list)
         fields = join_fields.replace(";", "\n\t")
-
-        output = ModelCreator.model_string(fields, data['table'])
+        model = data['content_name'].capitalize()
+        table = data['content_name'].lower()
+        output = ModelCreator.model_string(fields, model, table)
         print(output)
         f.write(textwrap.dedent(output))
 
 def make_file(data):
-    file_dir = '{}/app/{}/'.format(working_dir, data['dir'])
-    file_path = '{}/app/{}/{}'.format(working_dir, data['dir'], 'models.py')
+    model_package = data['content_name'].lower()
+    file_dir = '{}/app/{}/'.format(working_dir, model_package)
+    file_path = '{}/app/{}/{}'.format(working_dir, model_package, 'models.py')
 
     try:
         os.mkdir(file_dir)

@@ -4,30 +4,16 @@ import textwrap
 working_dir = os.getcwd()
 
 class ModelCreator:
-
-    @staticmethod
-    def obj_repr_string():
-        return 'def __init__(self, name):\n\t\tself.id = id'
-
-    @staticmethod
-    def init_string():
-        return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
+    @classmethod
+    def get_fields_names(cls, data):
+        field_list = []
+        for field in data['fields']:
+            field_list.append(field['column_name'])
+        field_names = ", ".join(field_list)
+        return field_names
 
     @classmethod
-    def model_string(cls, fields, model, table):
-        return "from app import db\n" \
-               "from app.core.models import Base\n" \
-               "\n\nclass {model_name}(Base):\n\t" \
-               "__tablename__ = '{table_name}'\n\n\t" \
-               "{fields}\n\n\t" \
-               "{init_string}\n\n\t" \
-               "{repr_string}".\
-            format(model_name=model, fields=fields, table_name=table, init_string=cls.init_string(),
-                   repr_string=cls.obj_repr_string())
-
-
-def create_model(data, file_path):
-    with open(file_path, 'w') as f:
+    def get_model_fields(cls, data):
         field_list = []
         for field in data['fields']:
             if field['is_primary_key']:
@@ -60,13 +46,38 @@ def create_model(data, file_path):
                     else:
                         field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
 
-
         join_fields = ";".join(field_list)
-        fields = join_fields.replace(";", "\n\t")
+        model_fields = join_fields.replace(";", "\n\t")
+        return model_fields
+
+    @classmethod
+    def obj_repr_string(cls, fields):
+        field_names = cls.get_fields_names(fields)
+        return 'def __init__(self, {field_names}):\n\t\tself.id = id'.format(field_names=field_names)
+
+    @staticmethod
+    def init_string():
+        return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
+
+    @classmethod
+    def model_string(cls, fields, model, table, data):
+        return "from app import db\n" \
+               "from app.core.models import Base\n" \
+               "\n\nclass {model_name}(Base):\n\t" \
+               "__tablename__ = '{table_name}'\n\n\t" \
+               "{fields}\n\n\t" \
+               "{init_string}\n\n\t" \
+               "{repr_string}".\
+            format(model_name=model, fields=fields, table_name=table, init_string=cls.init_string(),
+                   repr_string=cls.obj_repr_string(data))
+
+
+def create_model(data, file_path):
+    with open(file_path, 'w') as f:
+        model_fields = ModelCreator.get_model_fields(data)
         model = data['content_name'].capitalize()
         table = data['content_name'].lower()
-        output = ModelCreator.model_string(fields, model, table)
-        print(output)
+        output = ModelCreator.model_string(model_fields, model, table, data)
         f.write(textwrap.dedent(output))
 
 def make_file(data):

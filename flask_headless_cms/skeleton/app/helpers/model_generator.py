@@ -51,12 +51,23 @@ class ModelCreator:
         return model_fields
 
     @classmethod
-    def obj_repr_string(cls, fields):
-        field_names = cls.get_fields_names(fields)
-        return 'def __init__(self, {field_names}):\n\t\tself.id = id'.format(field_names=field_names)
+    def get_init_field_string(cls, data):
+        field_list = []
+        for field in data['fields']:
+            field_list.append('self.{field_name} = {field_name}'.format(field_name=field['column_name']))
+        join_fields = ";".join(field_list)
+        repr_fields = join_fields.replace(";", "\n\t\t")
+        return repr_fields
+
+    @classmethod
+    def get_init_string(cls, data):
+        field_names = cls.get_fields_names(data)
+        init_fields = cls.get_init_field_string(data)
+        return 'def __init__(self, {field_names}):\n\t\t{init_fields}'.format(field_names=field_names,
+                                                                              init_fields=init_fields)
 
     @staticmethod
-    def init_string():
+    def get_repr_string():
         return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
 
     @classmethod
@@ -68,8 +79,8 @@ class ModelCreator:
                "{fields}\n\n\t" \
                "{init_string}\n\n\t" \
                "{repr_string}".\
-            format(model_name=model, fields=fields, table_name=table, init_string=cls.init_string(),
-                   repr_string=cls.obj_repr_string(data))
+            format(model_name=model, fields=fields, table_name=table, init_string=cls.get_init_string(data),
+                   repr_string=cls.get_repr_string())
 
 
 def create_model(data, file_path):

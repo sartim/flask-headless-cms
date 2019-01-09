@@ -45,6 +45,16 @@ class ModelCreator:
                         field_list.append('{0} = db.Column(db.JSON)'.format(field['column_name']))
                     else:
                         field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
+                if field['data_type'] == 'TIMESTAMP':
+                    if not field['is_null']:
+                        if not field['on_update_default']:
+                            field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp())'
+                                              .format(field['column_name']))
+                        else:
+                            field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp(), '
+                                              'onupdate=db.func.current_timestamp())'.format(field['column_name']))
+                    else:
+                        field_list.append('{0} = db.Column(db.DateTime, nullable=True)'.format(field['column_name']))
 
         join_fields = ";".join(field_list)
         model_fields = join_fields.replace(";", "\n\t")

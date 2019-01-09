@@ -129,3 +129,34 @@ _Example_
 	]
 }
 ```
+
+_Overriding house keeping fields_
+```
+{
+    "content_name": "user",
+    "fields": [
+        .......
+        {
+             "column_name": "created_date",
+             "data_type": "TIMESTAMP",
+             "data_size": null,
+             "is_primary_key": false,
+             "is_foreign_key": false,
+             "is_null": false,
+             "default": "CURRENT_TIMESTAMP",
+             "on_update_default": false
+         },
+         {
+             "column_name": "updated_date",
+             "data_type": "TIMESTAMP",
+             "data_size": null,
+             "is_primary_key": false,
+             "is_foreign_key": false,
+             "is_null": false,
+             "default": "CURRENT_TIMESTAMP",
+             "on_update_default": true
+         }
+         .......
+    ]
+}
+ ```

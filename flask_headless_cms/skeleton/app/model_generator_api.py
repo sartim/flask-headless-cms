@@ -4,7 +4,7 @@ from app.helpers import validator, model_generator
 
 
 @app.route('/field/param', methods=['POST'])
-def model_generator_api():
+def generator_api():
     if request.is_json:
         body = request.data
         keys = ['content_name', 'fields']

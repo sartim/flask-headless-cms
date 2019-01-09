@@ -125,6 +125,16 @@ _Example_
 	         "is_foreign_key": false,
 	         "is_null": false,
 	         "default": false
+	     },
+	     {
+	         "column_name": "confirmed_date",
+	         "data_type": "TIMESTAMP",
+	         "data_size": null,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "default": "CURRENT_TIMESTAMP",
+	         "on_update_default": null
 	     }
 	]
 }
@@ -144,7 +154,7 @@ _Overriding house keeping fields_
              "is_foreign_key": false,
              "is_null": false,
              "default": "CURRENT_TIMESTAMP",
-             "on_update_default": false
+             "on_update_default": null
          },
          {
              "column_name": "updated_date",
@@ -154,7 +164,7 @@ _Overriding house keeping fields_
              "is_foreign_key": false,
              "is_null": false,
              "default": "CURRENT_TIMESTAMP",
-             "on_update_default": true
+             "on_update_default": "CURRENT_TIMESTAMP"
          }
          .......
     ]

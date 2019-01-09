@@ -5,7 +5,7 @@ from flask_script import Server, Manager, prompt_bool, Shell
 from app import db
 from app.core import models
 from app.root_api import *
-from app.model_generator_api import *
+from app.generator_api import *
 
 
 def _make_context():

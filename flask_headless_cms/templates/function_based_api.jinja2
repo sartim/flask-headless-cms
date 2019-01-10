@@ -1,0 +1,34 @@
+from flask import request, jsonify
+from app import app
+from app.helpers import json_builder
+
+
+@app.route({{ api_route }})
+def json_{{ api_name }}:
+    if request.method == 'GET':
+        r = {{ model }}.get_all(int(page) if page else None)
+        results = []
+        for v in r.items:
+            del v._sa_instance_state
+            results.append(v.__dict__)
+        data = json_builder.response_dict(users, results, "{{ api_route }}")
+        return json_builder.success_js_response(
+            success=False if data["count"] == 0 else True,
+            message="No results" if data["count"] == 0 else "Successfully retrieved results",
+            dict_ctx=data)
+    if request.method == 'POST':
+        instance = {{ model_instance }}
+        instance.add(instance)
+        instance.save()
+        return jsonify(message="Success"), 201
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        request_body = request.get_json()
+        instance = {{ model }}.get_by_id(body['id'])
+        instance.delete()
+        instance.save()
+        return json_builder.success_js_response(
+            message="Successfully deleted item with id {}".format(body['id']))
+        )
+    return False

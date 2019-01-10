@@ -14,10 +14,12 @@ class Base(db.Model):
         return cls.query.filter_by(id=id).first()
 
     @staticmethod
-    def create(obj):
+    def add(obj):
         db.session.add(obj)
-        obj.save()
         return obj
+
+    def delete(self):
+        db.session.delete(self)
 
     @staticmethod
     def save():

@@ -22,6 +22,8 @@ def appendToBashrc():
     out = open(bashrc, 'a')
     out.write('\n%s' % alias)
     out.close()
+    cmd = 'source {}'.format(bashrc)
+    os.system(cmd)
 
 
 class PostDevelopCommand(develop):
@@ -36,15 +38,15 @@ class PostInstallCommand(install):
         appendToBashrc()
 
 
-setup(name='FlaskHeadlessCms',
-      version='0.1',
+setup(name='flask_headless_cms',
+      version='0.0.1',
       description='Flask Headless CMS',
       url='https://github.com/sartim/flask-headless-cms',
       author='sartim',
       author_email='sarrtim@gmail.com',
       license='MIT',
       packages=find_packages(),
-      package_data={'flask_headless_cms': ['templates/.env.jinja2']},
+      package_data={'flask_headless_cms': ['templates/*']},
       include_package_data=True,
       install_requires=[
           'requests',

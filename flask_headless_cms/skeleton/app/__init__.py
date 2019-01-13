@@ -2,12 +2,12 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from app.config import DevelopmentConfig
+# from app.config import DevelopmentConfig
 
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(DevelopmentConfig)
+    # app.config.from_object(DevelopmentConfig)
     return app
 
 app = create_app()

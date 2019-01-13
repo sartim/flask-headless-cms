@@ -48,13 +48,13 @@ def main(args, answers):
     # Create config.py
     print("Creating the config...")
     secret_key = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
+    basic_auth_user = 'app'
     basic_auth_password = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
-    template = template_env.get_template('.env.jinja2')
+    template = template_env.get_template('env.jinja2')
     template_var = dict(secret_key=secret_key, db_name=answers['db_name'], db_host=answers['db_host'],
                         db_user=answers['db_user'], db_port=answers['db_port'],
-                        basic_auth_user=answers['basic_auth_user'],
-                        basic_auth_password=answers['basic_auth_password'] if answers[
-                            'basic_auth_password'] else basic_auth_password,
+                        basic_auth_user=basic_auth_user,
+                        basic_auth_password=basic_auth_password,
                         is_dev='true' if answers['environment'] == 'Development' else 'false',
                         is_test='true' if answers['environment'] == 'Testing' else 'false',
                         is_prod='true' if answers['environment'] == 'Production' else 'false')
@@ -123,7 +123,7 @@ if __name__ == '__main__':
                         'type': 'rawlist',
                         'name': 'database',
                         'message': 'Please select one of the database engines',
-                        'choices': [constants.POSTGRESQL, constants.MYSQL]
+                        'choices': [constants.POSTGRESQL]
                     },
                     {
                         'type': 'input',
@@ -154,17 +154,6 @@ if __name__ == '__main__':
                         'name': 'db_password',
                         'message': 'Please enter your database password',
                         'validate': HasValueValidator
-                    },
-                    {
-                        'type': 'input',
-                        'name': 'basic_auth_user',
-                        'message': 'Please enter your basic auth user',
-                        'validate': HasValueValidator
-                    },
-                    {
-                        'type': 'password',
-                        'name': 'basic_auth_password',
-                        'message': 'Please enter your basic auth password'
                     }
                 ]
                 answers = prompt(questions)

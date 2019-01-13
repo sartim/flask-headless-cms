@@ -38,9 +38,14 @@ class PostInstallCommand(install):
         appendToBashrc()
 
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(name='flask_headless_cms',
       version='0.0.1',
       description='Flask Headless CMS',
+      long_description=long_description,
+      long_description_content_type="text/markdown",
       url='https://github.com/sartim/flask-headless-cms',
       author='sartim',
       author_email='sarrtim@gmail.com',
@@ -67,4 +72,9 @@ setup(name='flask_headless_cms',
       cmdclass={
           'develop': PostDevelopCommand,
           'install': PostInstallCommand,
-      })
+      },
+      classifiers=[
+          "Programming Language :: Python :: 3",
+          "License :: OSI Approved :: MIT License",
+          "Operating System :: OS Independent",
+      ])

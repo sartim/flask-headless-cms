@@ -123,7 +123,7 @@ if __name__ == '__main__':
                         'type': 'rawlist',
                         'name': 'database',
                         'message': 'Please select one of the database engines',
-                        'choices': [constants.POSTGRESQL, constants.MYSQL]
+                        'choices': [constants.POSTGRESQL]
                     },
                     {
                         'type': 'input',

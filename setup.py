@@ -67,6 +67,7 @@ setup(name='flask_headless_cms',
           'psycopg2',
           'psycopg2-binary',
           'whaaaaat',
+          'pytest',
           'prompt-toolkit==1.0.14'
       ],
       cmdclass={

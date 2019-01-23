@@ -8,11 +8,10 @@ import subprocess
 import shutil
 import jinja2
 import codecs
-import psycopg2
 import constants
 from prompt_toolkit.validation import ValidationError, Validator
 from whaaaaat import prompt, print_json
-
+from flask_headless_cms.db_loader import postgres
 # Globals #
 cwd = os.getcwd()
 script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -45,6 +44,12 @@ def main(args, answers):
     print("Copying files and folders...")
     shutil.copytree(os.path.join(script_dir, skeleton_dir), fullpath)
 
+    # Create DB
+    print("Creating database...")
+    if answers['database'] == constants.POSTGRESQL:
+        postgres.create(db_name=answers['db_name'], db_host=answers['db_host'], db_user=answers['db_user'],
+                        db_password=answers['db_password'], db_port=answers['db_port'])
+
     # Create config.py
     print("Creating the config...")
     secret_key = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
@@ -74,19 +79,6 @@ def main(args, answers):
                 fd.write(error.decode('utf-8'))
                 print("Error with git init")
                 sys.exit(2)
-
-
-def check_for_postgres(answers):
-    try:
-        conn = psycopg2.connect(
-            "dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' connect_timeout=1 "
-                .format(db_name=answers['db_name'], db_user=answers['db_user'], db_host=answers['db_host'],
-                        db_password=answers['db_password']))
-        conn.close()
-        return True
-    except:
-        return False
-    pass
 
 
 class HasValueValidator(Validator):
@@ -157,11 +149,6 @@ if __name__ == '__main__':
                     }
                 ]
                 answers = prompt(questions)
-                if answers['database'] == constants.POSTGRESQL:
-                    has_postgres = check_for_postgres(answers)
-                    if not has_postgres:
-                        print("You don't have PostreSQL Installed!")
-                        break
                 print_json(answers)
                 confirm_question = [
                     {

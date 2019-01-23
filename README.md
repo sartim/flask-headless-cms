@@ -8,7 +8,7 @@
 
 ## Overview
 
-A tool for generating an API for content management. All about the Data!
+A tool for generating an API for content management. Generated SQLAlchemy models and endpoints based on content types created via API.
 
 ### Features
 

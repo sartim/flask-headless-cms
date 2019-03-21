@@ -71,7 +71,8 @@ BODY:
             "default": null
 	    },
 	    ............
-	]
+	],
+	"methods": ["GET, "POST"]
 }
 ```
 
@@ -136,7 +137,8 @@ _Example_
 	         "default": "CURRENT_TIMESTAMP",
 	         "on_update_default": null
 	     }
-	]
+	],
+	"methods": ["GET, "POST", "PUT", "DELETE"]
 }
 ```
 

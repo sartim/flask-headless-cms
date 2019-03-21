@@ -19,13 +19,14 @@ class ApiCreator:
                "pass".format(api_name=data['content_name'])
 
 
-def create_model(data, file_path):
+def create_api(data, file_path):
     with open(file_path, 'w') as f:
         model_fields = ApiCreator.get_model_fields(data)
         model = data['content_name'].capitalize()
         table = data['content_name'].lower()
         output = ApiCreator.api_file(model_fields, model, table, data)
         f.write(textwrap.dedent(output))
+
 
 def make_file(data):
     model_package = data['content_name'].lower()
@@ -39,5 +40,5 @@ def make_file(data):
     else:
         print("Successfully created the directory %s" % file_dir)
 
-    create_model(data, file_path)
+    create_api(data, file_path)
     print('Execution completed.')

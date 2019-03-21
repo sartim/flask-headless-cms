@@ -8,7 +8,7 @@
 
 ## Overview
 
-A tool for generating an API for content management. Generated SQLAlchemy models and endpoints based on content types created via API.
+A tool for generating a database structure and an API for content management. Generated SQLAlchemy models and endpoints based on content types created via API.
 
 ### Features
 
@@ -71,7 +71,8 @@ BODY:
             "default": null
 	    },
 	    ............
-	]
+	],
+	"methods": ["GET, "POST"]
 }
 ```
 
@@ -136,7 +137,8 @@ _Example_
 	         "default": "CURRENT_TIMESTAMP",
 	         "on_update_default": null
 	     }
-	]
+	],
+	"methods": ["GET, "POST", "PUT", "DELETE"]
 }
 ```
 

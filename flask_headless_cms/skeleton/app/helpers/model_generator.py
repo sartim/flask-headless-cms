@@ -85,8 +85,10 @@ class ModelCreator:
         pass
 
     @classmethod
-    def get_method(cls):
-        pass
+    def get_by_id_method(cls):
+        return "@classmethod" \
+               "def get_article_by_id(cls, id):"\
+               "\treturn cls.query.filter_by(id=id).first()"
 
     @classmethod
     def model_string(cls, fields, model, table, data):

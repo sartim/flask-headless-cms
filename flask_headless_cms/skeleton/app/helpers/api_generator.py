@@ -10,13 +10,36 @@ class ApiCreator:
 
     @classmethod
     def api_file(cls, model_fields, model, table, data):
+        methods = data['methods']
+        for method in methods:
+            if method == 'GET':
+                pass
+            if method == 'POST':
+                pass
+            if method == 'PUT':
+                pass
+            if method == 'PATCH':
+                pass
+            if method == 'DELETE':
+                pass
+
         return "from flask.views import MethodView\n" \
                "from app.core.models import Base\n" \
                "\n\nclass {api_name}_api(MethodView):\n\t" \
                "def get(self):\n\n\t" \
-               "pass\n\n\t" \
+               "\tpass\n\n\t" \
                "def post(self):\n\n\t" \
-               "pass".format(api_name=data['content_name'])
+               "\tpass".format(api_name=data['content_name'])
+
+    @classmethod
+    def get_all_api(cls, **kwargs):
+        return "from app.{package}.models import {model}\n" \
+               "@app.route('/{api_name}')" \
+               "def {api_name}():" \
+               "\tresults={model}.get_all()"\
+               "\tresults={model}.get_all()"\
+               "\treturn json(results)"\
+               .format(package=kwargs['package'], model=kwargs['model'], api_name=kwargs['api_name'])
 
 
 def create_api(data, file_path):

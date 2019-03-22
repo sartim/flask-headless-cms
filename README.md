@@ -138,7 +138,7 @@ _Example_
 	         "on_update_default": null
 	     }
 	],
-	"methods": ["GET, "POST", "PUT", "DELETE"]
+	"methods": ["GET", "POST", "PUT", "DELETE"]
 }
 ```
 

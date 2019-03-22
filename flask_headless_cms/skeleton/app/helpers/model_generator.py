@@ -81,6 +81,14 @@ class ModelCreator:
         return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
 
     @classmethod
+    def get_all_method(cls):
+        pass
+
+    @classmethod
+    def get_method(cls):
+        pass
+
+    @classmethod
     def model_string(cls, fields, model, table, data):
         return "from app import db\n" \
                "from app.core.models import Base\n" \

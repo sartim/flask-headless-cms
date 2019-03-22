@@ -4,11 +4,42 @@ import textwrap
 working_dir = os.getcwd()
 
 class ModelCreator:
+
+    @classmethod
+    def create_field(cls, field, field_list):
+        if field['is_primary_key']:
+            if field['data_type'] == 'INTEGER':
+                field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
+            if field['data_type'] == 'UUID':
+                field_list.append('{0} = db.Column(db.String, primary_key=True)'.format(field['column_name']))
+        if field['data_type'] == 'VARCHAR':
+            if not field['is_null']:
+                field_list.append('{0} = db.Column(db.String(255))'.format(field['column_name']))
+            field_list.append('{0} = db.Column(db.String(255), nullable=True)'.format(field['column_name']))
+        if field['data_type'] == 'TEXT':
+            if not field['is_null']:
+                field_list.append('{0} = db.Column(db.TEXT)'.format(field['column_name']))
+            field_list.append('{0} = db.Column(db.TEXT, nullable=True)'.format(field['column_name']))
+        if field['data_type'] == 'BOOLEAN':
+            if not field['default']:
+                field_list.append('{0} = db.Column(db.Boolean, default=False)'.format(field['column_name']))
+            field_list.append('{0} = db.Column(db.Boolean, default=True)'.format(field['column_name']))
+        if field['data_type'] == 'JSON':
+            if not field['is_null']:
+                field_list.append('{0} = db.Column(db.JSON)'.format(field['column_name']))
+            field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
+        if field['data_type'] == 'TIMESTAMP':
+            if not field['is_null']:
+                if not field['on_update_default']:
+                    field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp())'
+                                      .format(field['column_name']))
+                field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp(), '
+                                      'onupdate=db.func.current_timestamp())'.format(field['column_name']))
+            field_list.append('{0} = db.Column(db.DateTime, nullable=True)'.format(field['column_name']))
+
     @classmethod
     def get_fields_names(cls, data):
-        field_list = []
-        for field in data['fields']:
-            field_list.append(field['column_name'])
+        field_list = [field['column_name'] for field in data['fields']]
         field_names = ", ".join(field_list)
         return field_names
 
@@ -16,45 +47,7 @@ class ModelCreator:
     def get_model_fields(cls, data):
         field_list = []
         for field in data['fields']:
-            if field['is_primary_key']:
-                if not field['data_type'] == 'UUID':
-                    field_list.append('{0} = db.Column(db.String, primary_key=True)'.format(field['column_name']))
-            if not field['is_primary_key']:
-                if field['data_type'] == 'INTEGER':
-                    if not field['is_null']:
-                        field_list.append('{0} = db.Column(db.Integer, nullable=False)'.format(field['column_name']))
-                    else:
-                        field_list.append('{0} = db.Column(db.Integer, nullable=True)'.format(field['column_name']))
-                if field['data_type'] == 'VARCHAR':
-                    if not field['is_null']:
-                        field_list.append('{0} = db.Column(db.String(255))'.format(field['column_name']))
-                    else:
-                        field_list.append('{0} = db.Column(db.String(255), nullable=True)'.format(field['column_name']))
-                if field['data_type'] == 'TEXT':
-                    if not field['is_null']:
-                        field_list.append('{0} = db.Column(db.TEXT)'.format(field['column_name']))
-                    else:
-                        field_list.append('{0} = db.Column(db.TEXT, nullable=True)'.format(field['column_name']))
-                if field['data_type'] == 'BOOLEAN':
-                    if not field['default']:
-                        field_list.append('{0} = db.Column(db.Boolean, default=False)'.format(field['column_name']))
-                    else:
-                        field_list.append('{0} = db.Column(db.Boolean, default=True)'.format(field['column_name']))
-                if field['data_type'] == 'JSON':
-                    if not field['is_null']:
-                        field_list.append('{0} = db.Column(db.JSON)'.format(field['column_name']))
-                    else:
-                        field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
-                if field['data_type'] == 'TIMESTAMP':
-                    if not field['is_null']:
-                        if not field['on_update_default']:
-                            field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp())'
-                                              .format(field['column_name']))
-                        else:
-                            field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp(), '
-                                              'onupdate=db.func.current_timestamp())'.format(field['column_name']))
-                    else:
-                        field_list.append('{0} = db.Column(db.DateTime, nullable=True)'.format(field['column_name']))
+            cls.create_field(field, field_list)
 
         join_fields = ";".join(field_list)
         model_fields = join_fields.replace(";", "\n\t")

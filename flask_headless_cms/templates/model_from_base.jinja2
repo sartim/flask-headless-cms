@@ -1,0 +1,18 @@
+from app import db
+from app.core.models import Base
+
+
+class {{ model }}(Base):
+    __tablename__ = '{{ table_name }}'
+
+    {{ fields }}
+
+    {{ relations }}
+
+    def __init__(self, {{ params }}):
+        {{ declarations }}
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__, self.id)
+
+    {{ methods }}

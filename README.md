@@ -78,6 +78,7 @@ BODY:
 
 _Example_ 
 
+**With no relation**
 ```
 {
     "content_name": "user",
@@ -87,7 +88,7 @@ _Example_
 	    	"data_type": "INTEGER",
 	    	"data_size": null,
 	    	"is_primary_key": true,
-	    	"is_foreign_key": true,
+	    	"is_foreign_key": false,
 			"is_null": false,
 			"default": null
 	     },
@@ -142,6 +143,31 @@ _Example_
 }
 ```
 
+**With relation**
+
+```
+{
+    "content_name": "user_role",
+    "fields": [
+    	{
+	    	"column_name": "user_id",
+	    	"data_type": "INTEGER",
+	    	"is_primary_key": true,
+	    	"is_foreign_key": true,
+	    	"content_name_relation": "user"
+	     },
+	     {
+	    	"column_name": "role_id",
+	    	"data_type": "INTEGER",
+	    	"is_primary_key": true,
+	    	"is_foreign_key": true,
+	    	"content_name_relation": "role"
+	     },
+	],
+	"methods": ["GET", "POST", "PUT", "DELETE"]
+}
+```
+
 _Overriding house keeping fields_
 ```
 {
@@ -172,3 +198,15 @@ _Overriding house keeping fields_
     ]
 }
  ```
+ 
+| Allowed Fields        | Type           | Example                                         |
+| ----------------      |:-------------: | -----------------------------------------------:|
+| column_name           |   String       |   first_name, name, user_id                     |
+| data_type             |   String       |   VARCHAR, TIMESTAMP, INTEGER, BOOLEAN, DECIMAL |
+| data_size             |   Integer      |   255                                           |
+| is_primary_key        |   Boolean      |   true, false                                   |
+| is_foreign_key        |   Boolean      |   true, false                                   |
+| is_null               |   Boolean      |   true, false                                   |
+| default               |   String       |   false, CURRENT_TIMESTAMP                      |
+| on_update_default     |   String       |   CURRENT_TIMESTAMP                             |
+| content_name_relation |   String       |   <content_name>                                |

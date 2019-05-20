@@ -1,37 +1,23 @@
 import os
-import textwrap
 
-working_dir = os.getcwd()
-
-class ApiCreator:
-    @classmethod
-    def get_model_fields(cls, data):
-        pass
-
-    @classmethod
-    def api_file(cls, model_fields, model, table, data):
-        return "from flask.views import MethodView\n" \
-               "from app.core.models import Base\n" \
-               "\n\nclass {api_name}_api(MethodView):\n\t" \
-               "def get(self):\n\n\t" \
-               "pass\n\n\t" \
-               "def post(self):\n\n\t" \
-               "pass".format(api_name=data['content_name'])
+from create_app import template_env, cwd
 
 
-def create_api(data, file_path):
-    with open(file_path, 'w') as f:
-        model_fields = ApiCreator.get_model_fields(data)
-        model = data['content_name'].capitalize()
-        table = data['content_name'].lower()
-        output = ApiCreator.api_file(model_fields, model, table, data)
-        f.write(textwrap.dedent(output))
+def create_api(data, api_route, api_name, model_instance, path):
+    model = data['content_name'].capitalize()
+
+    template = template_env.get_template('function_based_api.jinja2')
+    template_var = dict(api_route=api_route, api_name=api_name, model=model, model_instance=model_instance)
+
+    with open(os.path.join(path,'.py'), 'w') as fd:
+        fd.write(template.render(template_var))
+
 
 
 def make_file(data):
     model_package = data['content_name'].lower()
-    file_dir = '{}/app/{}/'.format(working_dir, model_package)
-    file_path = '{}/app/{}/{}'.format(working_dir, model_package, '{}.py'.format(data['content_name'].lower()))
+    file_dir = '{}/app/{}/'.format(cwd, model_package)
+    file_path = '{}/app/{}/{}'.format(cwd, model_package, '{}.py'.format(data['content_name'].lower()))
 
     try:
         os.mkdir(file_dir)

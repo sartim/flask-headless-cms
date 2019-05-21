@@ -1,118 +1,88 @@
-import os
-import textwrap
-
-working_dir = os.getcwd()
-
-class ModelCreator:
-
-    @classmethod
-    def create_field(cls, field, field_list):
-        if field['is_primary_key']:
-            if field['data_type'] == 'INTEGER':
-                field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
-            if field['data_type'] == 'UUID':
-                field_list.append('{0} = db.Column(db.String, primary_key=True)'.format(field['column_name']))
-        if field['data_type'] == 'VARCHAR':
-            if not field['is_null']:
-                field_list.append('{0} = db.Column(db.String(255))'.format(field['column_name']))
-            field_list.append('{0} = db.Column(db.String(255), nullable=True)'.format(field['column_name']))
-        if field['data_type'] == 'TEXT':
-            if not field['is_null']:
-                field_list.append('{0} = db.Column(db.TEXT)'.format(field['column_name']))
-            field_list.append('{0} = db.Column(db.TEXT, nullable=True)'.format(field['column_name']))
-        if field['data_type'] == 'BOOLEAN':
-            if not field['default']:
-                field_list.append('{0} = db.Column(db.Boolean, default=False)'.format(field['column_name']))
-            field_list.append('{0} = db.Column(db.Boolean, default=True)'.format(field['column_name']))
-        if field['data_type'] == 'JSON':
-            if not field['is_null']:
-                field_list.append('{0} = db.Column(db.JSON)'.format(field['column_name']))
-            field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
-        if field['data_type'] == 'TIMESTAMP':
-            if not field['is_null']:
-                if not field['on_update_default']:
-                    field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp())'
-                                      .format(field['column_name']))
-                field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp(), '
-                                      'onupdate=db.func.current_timestamp())'.format(field['column_name']))
-            field_list.append('{0} = db.Column(db.DateTime, nullable=True)'.format(field['column_name']))
-
-    @classmethod
-    def get_fields_names(cls, data):
-        field_list = [field['column_name'] for field in data['fields']]
-        field_names = ", ".join(field_list)
-        return field_names
-
-    @classmethod
-    def get_model_fields(cls, data):
-        field_list = []
-        for field in data['fields']:
-            cls.create_field(field, field_list)
-
-        join_fields = ";".join(field_list)
-        model_fields = join_fields.replace(";", "\n\t")
-        return model_fields
-
-    @classmethod
-    def get_init_field_string(cls, data):
-        field_list = []
-        for field in data['fields']:
-            field_list.append('self.{field_name} = {field_name}'.format(field_name=field['column_name']))
-        join_fields = ";".join(field_list)
-        repr_fields = join_fields.replace(";", "\n\t\t")
-        return repr_fields
-
-    @classmethod
-    def get_init_string(cls, data):
-        field_names = cls.get_fields_names(data)
-        init_fields = cls.get_init_field_string(data)
-        return 'def __init__(self, {field_names}):\n\t\t{init_fields}'.format(field_names=field_names,
-                                                                              init_fields=init_fields)
-
-    @staticmethod
-    def get_repr_string():
-        return 'def __repr__(self):\n\t\treturn "%s(%s)" % (self.__class__.__name__, self.id)'
-
-    @classmethod
-    def get_all_method(cls):
-        pass
-
-    @classmethod
-    def get_method(cls):
-        pass
-
-    @classmethod
-    def model_string(cls, fields, model, table, data):
-        return "from app import db\n" \
-               "from app.core.models import Base\n" \
-               "\n\nclass {model_name}(Base):\n\t" \
-               "__tablename__ = '{table_name}'\n\n\t" \
-               "{fields}\n\n\t" \
-               "{init_string}\n\n\t" \
-               "{repr_string}".\
-            format(model_name=model, fields=fields, table_name=table, init_string=cls.get_init_string(data),
-                   repr_string=cls.get_repr_string())
+from app.helpers import utils
+from flask_headless_cms.create_app import template_env
 
 
-def create_model(data, file_path):
-    with open(file_path, 'w') as f:
-        model_fields = ModelCreator.get_model_fields(data)
-        model = data['content_name'].capitalize()
-        table = data['content_name'].lower()
-        output = ModelCreator.model_string(model_fields, model, table, data)
-        f.write(textwrap.dedent(output))
+def create_file_dir(package_name):
+    file_dir = '{}/app/{}/'.format(utils.working_dir, package_name)
+    if utils.create_dir(file_dir):
+        return file_dir
+    raise OSError
+
+
+def create_model_package(package_name):
+    model_dir = '{}/app/{}/{}'.format(utils.working_dir, package_name, 'models.py')
+    if utils.create_dir(model_dir):
+        return model_dir
+    raise OSError
+
+
+def _create_field(field, field_list):
+    if field['is_primary_key']:
+        if field['data_type'] == 'INTEGER':
+            field_list.append('{0} = db.Column(db.Integer, primary_key=True)'.format(field['column_name']))
+        if field['data_type'] == 'UUID':
+            field_list.append('{0} = db.Column(db.String, primary_key=True)'.format(field['column_name']))
+    if field['data_type'] == 'VARCHAR':
+        if not field['is_null']:
+            field_list.append('{0} = db.Column(db.String(255))'.format(field['column_name']))
+        field_list.append('{0} = db.Column(db.String(255), nullable=True)'.format(field['column_name']))
+    if field['data_type'] == 'TEXT':
+        if not field['is_null']:
+            field_list.append('{0} = db.Column(db.TEXT)'.format(field['column_name']))
+        field_list.append('{0} = db.Column(db.TEXT, nullable=True)'.format(field['column_name']))
+    if field['data_type'] == 'BOOLEAN':
+        if not field['default']:
+            field_list.append('{0} = db.Column(db.Boolean, default=False)'.format(field['column_name']))
+        field_list.append('{0} = db.Column(db.Boolean, default=True)'.format(field['column_name']))
+    if field['data_type'] == 'JSON':
+        if not field['is_null']:
+            field_list.append('{0} = db.Column(db.JSON)'.format(field['column_name']))
+        field_list.append('{0} = db.Column(db.JSON, nullable=True)'.format(field['column_name']))
+    if field['data_type'] == 'TIMESTAMP':
+        if not field['is_null']:
+            if not field['on_update_default']:
+                field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp())'
+                                  .format(field['column_name']))
+            field_list.append('{0} = db.Column(db.DateTime, default=db.func.current_timestamp(), '
+                              'onupdate=db.func.current_timestamp())'.format(field['column_name']))
+        field_list.append('{0} = db.Column(db.DateTime, nullable=True)'.format(field['column_name']))
+
+
+def _get_attributes(data):
+    field_list = []
+    for field in data['fields']:
+        _create_field(field, field_list)
+    join_fields = ";".join(field_list)
+    model_fields = join_fields.replace(";", "\n\t")
+    return model_fields
+
+
+def _get_model_params(data):
+    field_list = [field['column_name'] for field in data['fields']]
+    field_names = ", ".join(field_list)
+    return field_names
+
+
+def _get_declarations(data):
+    field_list = []
+    for field in data['fields']:
+        field_list.append('self.{field_name} = {field_name}'.format(field_name=field['column_name']))
+    join_fields = ";".join(field_list)
+    repr_fields = join_fields.replace(";", "\n\t\t")
+    return repr_fields
+
 
 def make_file(data):
-    model_package = data['content_name'].lower()
-    file_dir = '{}/app/{}/'.format(working_dir, model_package)
-    file_path = '{}/app/{}/{}'.format(working_dir, model_package, 'models.py')
-
-    try:
-        os.mkdir(file_dir)
-    except OSError:
-        print("Creation of the directory %s failed" % file_dir)
-    else:
-        print("Successfully created the directory %s" % file_dir)
-
-    create_model(data, file_path)
+    package_name = data['content_name'].lower()
+    file_dir = create_file_dir(package_name)
+    model_dir = create_model_package(package_name)
+    model = data['content_name'].capitalize()
+    table = data['content_name'].lower()
+    template = template_env.get_template('model_from_base.jinja2')
+    attributes = _get_attributes(data)
+    params = _get_model_params(data)
+    declarations = _get_declarations(data)
+    template_var = dict(model=model, table=table, attributes=attributes, params=params, declarations=declarations)
+    with open(model_dir, 'w') as fd:
+        fd.write(template.render(template_var))
     print('Execution completed.')

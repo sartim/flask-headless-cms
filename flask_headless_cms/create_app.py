@@ -8,6 +8,7 @@ import subprocess
 import shutil
 import jinja2
 import codecs
+
 import constants
 from prompt_toolkit.validation import ValidationError, Validator
 from whaaaaat import prompt, print_json

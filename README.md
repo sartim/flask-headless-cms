@@ -1,7 +1,6 @@
 # Flask Headless CMS
 
 [![Open Source Love](https://img.shields.io/badge/language-python-green.svg)](https://github.com/sartim/flask-headless-cms)
-[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/sartim/flask-headless-cms)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/sartim/flask-headless-cms/blob/master/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/sartim/flask-headless-cms/issues)
 [![Build Status](https://travis-ci.com/sartim/flask-headless-cms.svg?branch=master)](https://travis-ci.com/sartim/flask-headless-cms)

@@ -1,0 +1,61 @@
+{
+    "content_name": "user",
+    "fields": [
+    	{
+	    	"column_name": "id",
+	    	"data_type": "INTEGER",
+	    	"data_size": null,
+	    	"is_primary_key": true,
+	    	"is_foreign_key": false,
+			"is_null": false,
+			"default": null
+	     },
+	     {
+	    	"column_name": "name",
+	    	"data_type": "VARCHAR",
+	    	"data_size": 255,
+	    	"is_primary_key": false,
+	    	"is_foreign_key": false,
+	    	"is_null": false,
+	    	"default": null
+	     },
+	     {
+	         "column_name": "password",
+	         "data_type": "VARCHAR",
+	         "data_size": 255,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "defualt": null
+	     },
+	     {
+	         "column_name": "phone_number",
+	         "data_type": "VARCHAR",
+	         "data_size": 255,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "default": null
+	     },
+	     {
+	         "column_name": "is_active",
+	         "data_type": "BOOLEAN",
+	         "data_size": null,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "default": false
+	     },
+	     {
+	         "column_name": "confirmed_date",
+	         "data_type": "TIMESTAMP",
+	         "data_size": null,
+	         "is_primary_key": false,
+	         "is_foreign_key": false,
+	         "is_null": false,
+	         "default": "CURRENT_TIMESTAMP",
+	         "on_update_default": null
+	     }
+	],
+	"methods": ["GET", "POST", "PUT", "DELETE"]
+}

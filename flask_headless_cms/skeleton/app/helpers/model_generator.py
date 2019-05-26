@@ -1,4 +1,4 @@
-from app.helpers import utils
+from flask_headless_cms.skeleton.app.helpers import utils
 from flask_headless_cms.create_app import template_env
 
 

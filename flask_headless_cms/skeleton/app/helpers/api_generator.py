@@ -1,6 +1,6 @@
 import os
 
-from create_app import template_env, cwd
+from flask_headless_cms.create_app import template_env, cwd
 
 
 def create_api(data, api_route, api_name, model_instance, path):
@@ -9,9 +9,8 @@ def create_api(data, api_route, api_name, model_instance, path):
     template = template_env.get_template('function_based_api.jinja2')
     template_var = dict(api_route=api_route, api_name=api_name, model=model, model_instance=model_instance)
 
-    with open(os.path.join(path,'.py'), 'w') as fd:
+    with open(os.path.join(path, '.py'), 'w') as fd:
         fd.write(template.render(template_var))
-
 
 
 def make_file(data):

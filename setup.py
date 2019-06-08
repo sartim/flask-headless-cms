@@ -11,6 +11,9 @@ alias = 'alias flaskcli="python {0}/create_app.py"'.format(installed_path)
 pattern = re.compile(alias)
 homefolder = os.path.expanduser('~')
 bashrc = os.path.abspath('%s/.bashrc' % homefolder)
+if not os.path.exists(os.path.dirname(bashrc)):
+    with open(bashrc, "w") as f:
+        pass
 
 
 def appendToBashrc():

@@ -65,12 +65,13 @@ setup(name='flask_headless_cms',
           'Flask-Script',
           'Flask-SQLAlchemy',
           'gevent',
-          'greenlet',
           'gunicorn',
           'psycopg2',
           'psycopg2-binary',
           'whaaaaat',
-          'prompt-toolkit==1.0.14'
+          'prompt-toolkit==1.0.14',
+          'bcrypt',
+          'sqlalchemy-utils'
       ],
       cmdclass={
           'develop': PostDevelopCommand,

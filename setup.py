@@ -59,7 +59,6 @@ setup(name='flask_headless_cms',
       install_requires=[
           'requests',
           'Flask',
-          'Flask-Bcrypt',
           'Flask-Cors',
           'Flask-Migrate',
           'Flask-Script',

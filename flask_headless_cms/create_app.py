@@ -34,52 +34,56 @@ def main(args, answers):
     print("\nScaffolding {app_name}...".format(app_name=args.appname))
 
     # Variables #
-
     appname = args.appname
     fullpath = os.path.join(cwd, appname)
     skeleton_dir = 'skeleton'
 
-    # Tasks #
+    try:
+        # Copy files and folders
+        print("Copying files and folders...")
+        shutil.copytree(os.path.join(script_dir, skeleton_dir), fullpath)
 
-    # Copy files and folders
-    print("Copying files and folders...")
-    shutil.copytree(os.path.join(script_dir, skeleton_dir), fullpath)
+        # Create DB
+        print("Creating database...")
+        if answers['database'] == constants.POSTGRESQL:
+            postgres.create(db_name=answers['db_name'], db_host=answers['db_host'], db_user=answers['db_user'],
+                            db_password=answers['db_password'], db_port=answers['db_port'])
 
-    # Create DB
-    print("Creating database...")
-    if answers['database'] == constants.POSTGRESQL:
-        postgres.create(db_name=answers['db_name'], db_host=answers['db_host'], db_user=answers['db_user'],
-                        db_password=answers['db_password'], db_port=answers['db_port'])
+        # Create config.py
+        print("Creating the config...")
+        secret_key = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
+        basic_auth_user = 'app'
+        basic_auth_password = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
+        template = template_env.get_template('env.jinja2')
+        template_var = dict(secret_key=secret_key, db_name=answers['db_name'], db_host=answers['db_host'],
+                            db_user=answers['db_user'], db_port=answers['db_port'],
+                            basic_auth_user=basic_auth_user,
+                            basic_auth_password=basic_auth_password,
+                            is_dev='true' if answers['environment'] == 'Development' else 'false',
+                            is_test='true' if answers['environment'] == 'Testing' else 'false',
+                            is_prod='true' if answers['environment'] == 'Production' else 'false')
+        with open(os.path.join(fullpath, '.env'), 'w') as fd:
+            fd.write(template.render(template_var))
 
-    # Create config.py
-    print("Creating the config...")
-    secret_key = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
-    basic_auth_user = 'app'
-    basic_auth_password = codecs.encode(os.urandom(32), 'hex').decode('utf-8')
-    template = template_env.get_template('env.jinja2')
-    template_var = dict(secret_key=secret_key, db_name=answers['db_name'], db_host=answers['db_host'],
-                        db_user=answers['db_user'], db_port=answers['db_port'],
-                        basic_auth_user=basic_auth_user,
-                        basic_auth_password=basic_auth_password,
-                        is_dev='true' if answers['environment'] == 'Development' else 'false',
-                        is_test='true' if answers['environment'] == 'Testing' else 'false',
-                        is_prod='true' if answers['environment'] == 'Production' else 'false')
-    with open(os.path.join(fullpath,'.env'), 'w') as fd:
-        fd.write(template.render(template_var))
+        # Git init
+        if answers['has_git']:
+            print("Initializing Git...")
+            output, error = subprocess.Popen(
+                ['git', 'init', fullpath],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            ).communicate()
+            if error:
+                with open('git_error.log', 'w') as fd:
+                    fd.write(error.decode('utf-8'))
+                    print("Error with git init")
+                    sys.exit(2)
 
-    # Git init
-    if answers['has_git']:
-        print("Initializing Git...")
-        output, error = subprocess.Popen(
-            ['git', 'init', fullpath],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        ).communicate()
-        if error:
-            with open('git_error.log', 'w') as fd:
-                fd.write(error.decode('utf-8'))
-                print("Error with git init")
-                sys.exit(2)
+        return True
+    except Exception as e:
+        print("Application did not generate correctly. {}".format(e))
+        shutil.rmtree(appname)
+        return False
 
 
 class HasValueValidator(Validator):
@@ -89,6 +93,7 @@ class HasValueValidator(Validator):
             raise ValidationError(
                 message='Please fill in the value',
                 cursor_position=len(document.text))
+
 
 if __name__ == '__main__':
     arguments = get_arguments(sys.argv)

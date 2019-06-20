@@ -1,4 +1,5 @@
 import sqlalchemy
+from sqlalchemy_utils import database_exists, create_database
 
 
 def create(**kwargs):
@@ -14,5 +15,7 @@ def create(**kwargs):
                                               db_name=kwargs['db_name']))
     conn = engine.connect()
     conn.execute("commit")
-    conn.execute("CREATE DATABASE {db_name}".format(db_name=kwargs['db_name']))
-    conn.close()
+    if not database_exists('postgres://postgres@localhost/name'):
+        create_database('postgres://postgres@localhost/name')
+        return True
+    return False

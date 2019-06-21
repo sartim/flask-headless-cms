@@ -1,3 +1,5 @@
+import os
+
 from flask_headless_cms.skeleton.app.helpers import utils
 from flask_headless_cms.create_app import template_env
 
@@ -10,7 +12,7 @@ def create_file_dir(package_name):
 
 
 def create_model_package(package_name):
-    model_dir = '{}/app/{}/{}'.format(utils.working_dir, package_name, 'models.py')
+    model_dir = os.path.join('{}/app/{}/'.format(utils.working_dir, package_name))
     if utils.create_dir(model_dir):
         return model_dir
     raise OSError
@@ -74,7 +76,7 @@ def _get_declarations(data):
 
 def make_file(data):
     package_name = data['content_name'].lower()
-    file_dir = create_file_dir(package_name)
+    # file_dir = create_file_dir(package_name)
     model_dir = create_model_package(package_name)
     model = data['content_name'].capitalize()
     table = data['content_name'].lower()
@@ -83,6 +85,6 @@ def make_file(data):
     params = _get_model_params(data)
     declarations = _get_declarations(data)
     template_var = dict(model=model, table=table, attributes=attributes, params=params, declarations=declarations)
-    with open(model_dir, 'w') as fd:
+    with open('{}/models.py'.format(model_dir), 'w') as fd:
         fd.write(template.render(template_var))
     print('Execution completed.')

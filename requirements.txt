@@ -1,5 +1,5 @@
 argparse==1.4.0
-bcrypt==3.1.6
+bcrypt==3.2.0
 Flask==1.0.3
 Flask-Cors==3.0.6
 Flask-JWT-Extended==3.24.1
